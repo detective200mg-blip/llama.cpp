@@ -1,4 +1,4 @@
-name: ROCM Windows gfx1200
+name: ROCM Windows gfx1200 Build
 on: [workflow_dispatch]
 jobs:
   build:
@@ -7,11 +7,12 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: Setup ROCM
+    - name: Setup Build Environment
       run: |
-        # Install ROCM for Windows - this is placeholder
-        echo "Install ROCM 6.4 for Windows"
-    - name: Build
+        choco install cmake git
+        echo "Setting up ROCM 6.4 for Windows - placeholder"
+    - name: Build Windows DLL
       run: |
-        # Build Windows DLL targeting gfx1200
-        echo "Build commands for Windows ROCM DLL"
+        cd llama.cpp
+        echo "Actual build commands for Windows ROCM DLL targeting gfx1200 would go here"
+        # This is where we'd put the real build commands
