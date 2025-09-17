@@ -1,0 +1,42 @@
+name: Build ROCM/HIP for gfx1200
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-rocm:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+    
+    - name: Setup ROCM
+      run: |
+        sudo apt update
+        sudo apt install -y rocm-dev rocm-utils cmake build-essential
+        
+    - name: Set ROCM environment
+      run: |
+        echo "ROCM_PATH=/opt/rocm" >> $GITHUB_ENV
+        echo "/opt/rocm/bin" >> $GITHUB_PATH
+        
+    - name: Build for gfx1200
+      run: |
+        cd llama.cpp
+        mkdir -p build
+        cd build
+        cmake .. -DLLAMA_HIPBLAS=ON -DCMAKE_C_COMPILER=/opt/rocm/llvm/bin/clang -DCMAKE_CXX_COMPILER=/opt/rocm/llvm/bin/clang++ -DAMDGPU_TARGETS=gfx1200
+        make -j$(nproc)
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: llama-rocm-gfx1200
+        path: llama.cpp/build/
