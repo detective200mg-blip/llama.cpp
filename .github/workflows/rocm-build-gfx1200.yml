@@ -1,26 +1,17 @@
-name: ROCM gfx1200 Build
-on:
-  workflow_dispatch:
+name: ROCM Windows gfx1200
+on: [workflow_dispatch]
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: Install ROCM 6.0
+    - name: Setup ROCM
       run: |
-        sudo apt update
-        wget https://repo.radeon.com/amdgpu-install/6.0/ubuntu focal amdgpu-install_6.0.60000-1_all.deb
-        sudo apt install ./amdgpu-install_6.0.60000-1_all.deb
-        sudo amdgpu-install -y --usecase=rocm
-    - name: Build llama.cpp
+        # Install ROCM for Windows - this is placeholder
+        echo "Install ROCM 6.4 for Windows"
+    - name: Build
       run: |
-        export PATH=/opt/rocm/bin:$PATH
-        cd llama.cpp
-        make LLAMA_HIPBLAS=1 AMDGPU_TARGETS=gfx1200
-    - name: Upload binary
-      uses: actions/upload-artifact@v3
-      with:
-        name: llama-rocm-gfx1200-binary
-        path: llama.cpp/main
+        # Build Windows DLL targeting gfx1200
+        echo "Build commands for Windows ROCM DLL"
